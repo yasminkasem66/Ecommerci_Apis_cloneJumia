@@ -17,7 +17,9 @@ const register = async (req, res) => {
 
   const user = await User.create({ name, email, password, role });
   const tokenUser = createTokenUser(user);
+
   attachCookiesToResponse({ res, user: tokenUser });
+
   res.status(StatusCodes.CREATED).json({ user: tokenUser });
 };
 const login = async (req, res) => {
@@ -31,14 +33,16 @@ const login = async (req, res) => {
   if (!user) {
     throw new CustomError.UnauthenticatedError('Invalid Credentials');
   }
-  const isPasswordCorrect = await user.comparePassword(password);
+  const isPasswordCorrect = await user.comparePassword(password); 
   if (!isPasswordCorrect) {
     throw new CustomError.UnauthenticatedError('Invalid Credentials');
   }
   const tokenUser = createTokenUser(user);
-  attachCookiesToResponse({ res, user: tokenUser });
+  console.log(tokenUser)
+  let token= attachCookiesToResponse({ res, user: tokenUser });
+  // console.log(token)
 
-  res.status(StatusCodes.OK).json({ user: tokenUser });
+  res.status(StatusCodes.OK).json({ user: tokenUser, x: token });
 };
 const logout = async (req, res) => {
   res.cookie('token', 'logout', {

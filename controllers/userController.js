@@ -25,6 +25,7 @@ const getSingleUser = async (req, res) => {
 const showCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: req.user });
 };
+
 // update user with user.save()
 const updateUser = async (req, res) => {
   const { email, name } = req.body;
@@ -42,6 +43,9 @@ const updateUser = async (req, res) => {
   attachCookiesToResponse({ res, user: tokenUser });
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
+
+
+
 const updateUserPassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
   if (!oldPassword || !newPassword) {
