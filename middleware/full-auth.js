@@ -9,23 +9,23 @@ const authenticateUser = async (req, res, next) => {
   if (authHeader && authHeader.startsWith('Bearer')) {
 
     token = authHeader.split(' ')[1];
-  
+
   }
 
-  
+
   // check cookies
   else if (req.cookies.token) {
     token = req.cookies.token;
   }
 
-  console.log(token )
+  console.log(token)
 
   if (!token) {
     throw new CustomError.UnauthenticatedError('Authentication invalid');
   }
   try {
-    console.log("c")
-    console.log(token)
+    // console.log("c")
+    // console.log(token)
     // const payload = isTokenValid(token);
     let payload;
     jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
@@ -36,7 +36,7 @@ const authenticateUser = async (req, res, next) => {
         payload = decoded;
       }
     });
-    
+
     // var decoded = jwt.decode(token);
     // var decoded = jwt.decode(token, { complete: true });
 
@@ -48,6 +48,7 @@ const authenticateUser = async (req, res, next) => {
       userId: payload.userId,
       role: payload.role,
       name: payload.name,
+      image: payload.image,
     };
 
     next();

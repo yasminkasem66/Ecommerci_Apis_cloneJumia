@@ -8,7 +8,7 @@ const SingleOrderItemSchema = mongoose.Schema({
   product: {
     type: mongoose.Schema.ObjectId,
     ref: 'Product',
-    required: true,
+    // required: true,
   },
 });
 

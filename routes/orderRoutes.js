@@ -1,9 +1,13 @@
 const express = require('express');
 const router = express.Router();
+// const {
+//   authenticateUser,
+//   authorizeRoles,
+// } = require('../middleware/authentication');
 const {
   authenticateUser,
-  authorizePermissions,
-} = require('../middleware/authentication');
+  authorizeRoles,
+} = require('../middleware/full-auth');
 
 const {
   getAllOrders,
@@ -16,7 +20,7 @@ const {
 router
   .route('/')
   .post(authenticateUser, createOrder)
-  .get(authenticateUser, authorizePermissions('admin'), getAllOrders);
+  .get(authenticateUser, authorizeRoles('admin'), getAllOrders);
 
 router.route('/showAllMyOrders').get(authenticateUser, getCurrentUserOrders);
 

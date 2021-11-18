@@ -22,6 +22,7 @@ const createOrder = async (req, res) => {
     );
   }
 
+  //................................................................
   let orderItems = [];
   let subtotal = 0;
 
@@ -42,6 +43,7 @@ const createOrder = async (req, res) => {
     };
     // add item to order
     orderItems = [...orderItems, singleOrderItem];
+    // orderItems.push(singleOrderItem)
     // calculate subtotal
     subtotal += item.amount * price;
   }
@@ -67,10 +69,15 @@ const createOrder = async (req, res) => {
     .status(StatusCodes.CREATED)
     .json({ order, clientSecret: order.clientSecret });
 };
+
+
 const getAllOrders = async (req, res) => {
   const orders = await Order.find({});
   res.status(StatusCodes.OK).json({ orders, count: orders.length });
 };
+
+
+
 const getSingleOrder = async (req, res) => {
   const { id: orderId } = req.params;
   const order = await Order.findOne({ _id: orderId });
@@ -84,6 +91,7 @@ const getCurrentUserOrders = async (req, res) => {
   const orders = await Order.find({ user: req.user.userId });
   res.status(StatusCodes.OK).json({ orders, count: orders.length });
 };
+
 const updateOrder = async (req, res) => {
   const { id: orderId } = req.params;
   const { paymentIntentId } = req.body;
@@ -104,6 +112,8 @@ const updateOrder = async (req, res) => {
 module.exports = {
   getAllOrders,
   getSingleOrder,
+
+  
   getCurrentUserOrders,
   createOrder,
   updateOrder,

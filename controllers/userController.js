@@ -13,6 +13,13 @@ const getAllUsers = async (req, res) => {
   res.status(StatusCodes.OK).json({ users });
 };
 
+
+const getAllAdmins = async (req, res) => {
+  console.log(req.user);
+  const users = await User.find({ role: 'admin' }).select('-password');
+  res.status(StatusCodes.OK).json({ users });
+};
+
 const getSingleUser = async (req, res) => {
   const user = await User.findOne({ _id: req.params.id }).select('-password');
   if (!user) {
@@ -23,6 +30,7 @@ const getSingleUser = async (req, res) => {
 };
 
 const showCurrentUser = async (req, res) => {
+  // res.status(StatusCodes.OK).json({ user: req.user });
   res.status(StatusCodes.OK).json({ user: req.user });
 };
 
@@ -53,7 +61,7 @@ const updateUserPassword = async (req, res) => {
   }
   const user = await User.findOne({ _id: req.user.userId });
 
-  const isPasswordCorrect = await user.comparePassword(oldPassword);
+  const isPasswordCorrect = await user.comparePassword(oldPassword);//true 
   if (!isPasswordCorrect) {
     throw new CustomError.UnauthenticatedError('Invalid Credentials');
   }
@@ -69,6 +77,7 @@ module.exports = {
   showCurrentUser,
   updateUser,
   updateUserPassword,
+  getAllAdmins
 };
 
 // update user with findOneAndUpdate

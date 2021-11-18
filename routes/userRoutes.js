@@ -14,11 +14,16 @@ const {
   showCurrentUser,
   updateUser,
   updateUserPassword,
+  getAllAdmins
 } = require('../controllers/userController');
 
 router
   .route('/')
   .get(authenticateUser, authorizeRoles('admin'), getAllUsers);
+
+router
+  .route('/getAdmins')
+  .get(authenticateUser, authorizeRoles('admin'), getAllAdmins);
 // router
 //   .route('/')
 //   .get(authenticateUser, authorizePermissions('admin'), getAllUsers);

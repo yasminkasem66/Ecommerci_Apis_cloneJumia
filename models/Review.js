@@ -23,14 +23,24 @@ const ReviewSchema = mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    product: {
+    Product: {
       type: mongoose.Schema.ObjectId,
       ref: 'Product',
-      required: true,
+      // required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
+  
 );
+
+// ReviewSchema.virtual('Product', {
+//   ref: 'Product',
+//   localField:  'product',
+//   foreignField: '_id',
+//   justOne: false,//to return all reviews 
+// });
+
+
 ReviewSchema.index({ product: 1, user: 1 }, { unique: true });
 
 ReviewSchema.statics.calculateAverageRating = async function (productId) {
