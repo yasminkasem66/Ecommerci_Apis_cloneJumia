@@ -23,8 +23,13 @@ router
 
 router
   .route('/uploadImage')
-  .post(uploadImage);
-// [authenticateUser, authorizeRoles('admin')]
+  .post( uploadImage);
+ 
+// 222
+// router
+//   .route('/upload')
+//   .post([authenticateUser, authorizeRoles('admin')], upload.single('image'));
+
 
 
   
