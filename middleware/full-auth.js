@@ -53,7 +53,7 @@ const authenticateUser = async (req, res, next) => {
 
     next();
   } catch (error) {
-    throw new CustomError.UnauthenticatedError('Authentication invalid  ');
+    throw new CustomError.UnauthenticatedError('Authentication invalid , gggggg ');
   }
 };
 
