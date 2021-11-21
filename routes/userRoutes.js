@@ -14,7 +14,8 @@ const {
   showCurrentUser,
   updateUser,
   updateUserPassword,
-  getAllAdmins
+  getAllAdmins,
+  CreateAdmin
 } = require('../controllers/userController');
 
 router
@@ -31,6 +32,7 @@ router
 router.route('/showMe').get(authenticateUser, showCurrentUser);
 
 router.route('/updateUser').patch(authenticateUser, updateUser);
+router.route('/CreateAdmin').post(authenticateUser, authorizeRoles('admin'), CreateAdmin);
 
 router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword);
 

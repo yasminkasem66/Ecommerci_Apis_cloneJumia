@@ -20,6 +20,28 @@ const getAllAdmins = async (req, res) => {
   res.status(StatusCodes.OK).json({ users });
 };
 
+
+const CreateAdmin = async (req, res) => {
+  const { email, name, password, role, image } = req.body;
+  const emailAlreadyExists = await User.findOne({ email });
+  if (emailAlreadyExists) {
+    throw new CustomError.BadRequestError('Email already exists');
+  }
+  const user = await User.create({ name, email, password, role ,image });
+
+  res.status(StatusCodes.CREATED).json({ user: user });
+};
+
+
+
+
+
+
+
+
+
+
+
 const getSingleUser = async (req, res) => {
   const user = await User.findOne({ _id: req.params.id }).select('-password');
   if (!user) {
@@ -36,7 +58,7 @@ const showCurrentUser = async (req, res) => {
 
 // update user with user.save()
 const updateUser = async (req, res) => {
-  const { email, name } = req.body;
+  const { email, name, image, password } = req.body;
   if (!email || !name) {
     throw new CustomError.BadRequestError('Please provide all values');
   }
@@ -44,6 +66,8 @@ const updateUser = async (req, res) => {
 
   user.email = email;
   user.name = name;
+  user.image = image;
+  user.password = password;
 
   await user.save();
 
@@ -77,7 +101,8 @@ module.exports = {
   showCurrentUser,
   updateUser,
   updateUserPassword,
-  getAllAdmins
+  getAllAdmins,
+  CreateAdmin
 };
 
 // update user with findOneAndUpdate
