@@ -33,12 +33,7 @@ const ReviewSchema = mongoose.Schema(
   
 );
 
-// ReviewSchema.virtual('Product', {
-//   ref: 'Product',
-//   localField:  'product',
-//   foreignField: '_id',
-//   justOne: false,//to return all reviews 
-// });
+
 
 
 ReviewSchema.index({ product: 1, user: 1 }, { unique: true });
