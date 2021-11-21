@@ -4,6 +4,7 @@ require('express-async-errors');
 
 const express = require('express');
 const app = express();
+const path = require('path');
 // rest of the packages
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
@@ -53,6 +54,7 @@ app.use(cookieParser(process.env.JWT_SECRET));
 app.use(express.static('./public'));
 app.use(fileUpload());
 
+app.use("/public/uploads", express.static(path.join('./public/uploads')));
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
