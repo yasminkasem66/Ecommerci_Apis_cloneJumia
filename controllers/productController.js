@@ -59,6 +59,7 @@ const getAllProducts = async (req, res) => {
     })
   }
 
+
   let result = Product.find(queryObject)
   // sort
   if (sort) {
@@ -81,6 +82,16 @@ const getAllProducts = async (req, res) => {
   const products = await result
   res.status(200).json({ products, nbHits: products.length })
 }
+
+
+
+
+const getCategories = async (req, res) => {
+  const categories = await Product.find().distinct('category');
+  console.log("categories", categories);
+  res.status(StatusCodes.OK).json({ categories });
+};
+
 
 
 
@@ -187,7 +198,7 @@ module.exports = {
   updateProduct,
   deleteProduct,
   uploadImage,
-  
+  getCategories
 };
 
 

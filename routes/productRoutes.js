@@ -12,6 +12,7 @@ const {
   updateProduct,
   deleteProduct,
   uploadImage,
+  getCategories
 } = require('../controllers/productController');
 
 const { getSingleProductReviews } = require('../controllers/reviewController');
@@ -31,6 +32,7 @@ router
 //   .post([authenticateUser, authorizeRoles('admin')], upload.single('image'));
 
 
+router.route('/categories').get(getCategories);
 
   
 
@@ -41,5 +43,8 @@ router
   .delete([authenticateUser, authorizeRoles('admin')], deleteProduct);
 
 router.route('/:id/reviews').get(getSingleProductReviews);
+
+
+
 
 module.exports = router;
