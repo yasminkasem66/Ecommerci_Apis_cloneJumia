@@ -31,6 +31,9 @@ const UserSchema = new mongoose.Schema({
   image: {
     type: String
   },
+  phone: {
+    type: String
+  },
 });
 
 UserSchema.pre('save', async function () {
