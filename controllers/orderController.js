@@ -12,7 +12,6 @@ const fakeStripeAPI = async ({ amount, currency }) => {
 
 const createOrder = async (req, res) => {
   const { items: cartItems, tax, shippingFee } = req.body;
-
   if (!cartItems || cartItems.length < 1) {
     throw new CustomError.BadRequestError('No cart items provided');
   }
@@ -35,7 +34,7 @@ const createOrder = async (req, res) => {
     }
     const { name, price, image, _id } = dbProduct;
     const singleOrderItem = {
-      amount: item.amount,
+      amount: item.quantity,
       name,
       price,
       image,
@@ -45,7 +44,7 @@ const createOrder = async (req, res) => {
     orderItems = [...orderItems, singleOrderItem];
     // orderItems.push(singleOrderItem)
     // calculate subtotal
-    subtotal += item.amount * price;
+    subtotal += item.quantity * price;
   }
   // calculate total
   const total = tax + shippingFee + subtotal;
@@ -76,8 +75,6 @@ const getAllOrders = async (req, res) => {
   res.status(StatusCodes.OK).json({ orders, count: orders.length });
 };
 
-
-
 const getSingleOrder = async (req, res) => {
   const { id: orderId } = req.params;
   const order = await Order.findOne({ _id: orderId });
@@ -92,6 +89,7 @@ const getCurrentUserOrders = async (req, res) => {
   const orders = await Order.find({ user: req.user.userId });
   res.status(StatusCodes.OK).json({ orders, count: orders.length });
 };
+
 
 const updateOrder = async (req, res) => {
   const { id: orderId } = req.params;
