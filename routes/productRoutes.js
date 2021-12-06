@@ -12,7 +12,8 @@ const {
   updateProduct,
   deleteProduct,
   uploadImage,
-  getCategories
+  getCategories,
+  getParentCategories
 } = require('../controllers/productController');
 
 const { getSingleProductReviews } = require('../controllers/reviewController');
@@ -33,6 +34,7 @@ router
 
 
 router.route('/categories').get(getCategories);
+router.route('/ParentCategories').get(getParentCategories);
 
   
 

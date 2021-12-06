@@ -40,7 +40,7 @@ const authenticateUser = async (req, res, next) => {
     // var decoded = jwt.decode(token);
     // var decoded = jwt.decode(token, { complete: true });
 
-    console.log(payload)
+    console.log("payloadpayload", payload )
 
 
     // Attach the user and his permissions to the req object

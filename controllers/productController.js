@@ -166,6 +166,11 @@ const getCategories = async (req, res) => {
   res.status(StatusCodes.OK).json({ categories });
 };
 
+const getParentCategories = async (req, res) => {
+  const categoriesparent = await Product.find().distinct('categoryparent');
+  res.status(StatusCodes.OK).json({ categoriesparent });
+};
+
 
 
 
@@ -272,7 +277,8 @@ module.exports = {
   updateProduct,
   deleteProduct,
   uploadImage,
-  getCategories
+  getCategories,
+  getParentCategories
 };
 
 
