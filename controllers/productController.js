@@ -18,10 +18,9 @@ const createProduct = async (req, res) => {
 // };
 
 const getAllProducts = async (req, res) => {
-  const { featured, company, nameEn, sort, fields, numericFilters, category} = req.query
+  const { featured, company, nameEn, nameAr, sort, fields, numericFilters, category, categoryparent} = req.query
   console.log(" req.query", req.query);
   const queryObject = {}
-
   if (featured) {
     queryObject.featured = featured === 'true' ? true : false
   }
@@ -31,9 +30,16 @@ const getAllProducts = async (req, res) => {
   if (category) {
     queryObject.category = category
   }
+  if (categoryparent) {
+    queryObject.categoryparent = categoryparent
+  }
   if (nameEn) {
-    console.log(" nameEn", nameEn);
+    console.log("nameEn",nameEn);
     queryObject.nameEn={$regex: nameEn,$options:'i'}
+  }
+  if (nameAr) {
+    console.log("nameAr", nameAr);
+    queryObject.nameAr={$regex: nameAr,$options:'i'}
   }
   if (numericFilters) {
     const operatorMap = {
@@ -48,7 +54,7 @@ const getAllProducts = async (req, res) => {
       regEx,
       (match) => `-${operatorMap[match]}-`
     )
-    const options = ['price', 'rating']
+    const options = ['price', 'averageRating']
     filters = filters.split(',').forEach((item) => {
       const [field, operator, value] = item.split('-')
       if (options.includes(field)) {
@@ -63,6 +69,7 @@ const getAllProducts = async (req, res) => {
   // sort
   if (sort) {
     const sortList = sort.split(',').join(' ')
+    console.log("sortList", sortList);
     result = result.sort(sortList)
   } else {
     result = result.sort('createAt')

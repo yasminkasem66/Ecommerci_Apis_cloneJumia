@@ -10,14 +10,15 @@ const fakeStripeAPI = async ({ amount, currency }) => {
   return { client_secret, amount };
 };
 
+
 const createOrder = async (req, res) => {
   const { items: cartItems, tax, shippingFee } = req.body;
   if (!cartItems || cartItems.length < 1) {
-    throw new CustomError.BadRequestError('No cart items provided');
+    throw new CustomError.BadRequestError("No cart items provided");
   }
   if (!tax || !shippingFee) {
     throw new CustomError.BadRequestError(
-      'Please provide tax and shipping fee'
+      "Please provide tax and shipping fee"
     );
   }
 
@@ -26,7 +27,29 @@ const createOrder = async (req, res) => {
   let subtotal = 0;
 
   for (const item of cartItems) {
-    const dbProduct = await Product.findOne({ _id: item.product });
+    console.log(item);
+    const dbProduct = await Product.findOne({ _id: item.id });
+    console.log(dbProduct.quantity);
+    console.log(item.quantity);
+    let newQuantity = Number(dbProduct.quantity) - Number(item.quantity);
+
+    if (newQuantity <= 0) {
+      Product.findOneAndDelete({ _id: item.id }, function (err, docs) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("Deleted User : ", docs);
+        }
+      });
+    }
+
+    const newdbProduct = await Product.findOneAndUpdate(
+      { _id: item.id },
+      { $set: { quantity: newQuantity } },
+      { new: true }
+    );
+
+    console.log(newdbProduct);
     if (!dbProduct) {
       throw new CustomError.NotFoundError(
         `No product with id : ${item.product}`
@@ -51,7 +74,7 @@ const createOrder = async (req, res) => {
   // get client secret
   const paymentIntent = await fakeStripeAPI({
     amount: total,
-    currency: 'usd',
+    currency: "usd",
   });
 
   const order = await Order.create({
@@ -68,6 +91,7 @@ const createOrder = async (req, res) => {
     .status(StatusCodes.CREATED)
     .json({ order, clientSecret: order.clientSecret });
 };
+
 
 
 const getAllOrders = async (req, res) => {
@@ -140,3 +164,65 @@ module.exports = {
   createOrder,
   updateOrder,
 };
+
+
+
+
+// const createOrder = async (req, res) => {
+//   const { items: cartItems, tax, shippingFee } = req.body;
+//   if (!cartItems || cartItems.length < 1) {
+//     throw new CustomError.BadRequestError('No cart items provided');
+//   }
+//   if (!tax || !shippingFee) {
+//     throw new CustomError.BadRequestError(
+//       'Please provide tax and shipping fee'
+//     );
+//   }
+
+//   //................................................................
+//   let orderItems = [];
+//   let subtotal = 0;
+
+//   for (const item of cartItems) {
+//     const dbProduct = await Product.findOne({ _id: item.product });
+//     if (!dbProduct) {
+//       throw new CustomError.NotFoundError(
+//         `No product with id : ${item.product}`
+//       );
+//     }
+//     const { name, price, image, _id } = dbProduct;
+//     const singleOrderItem = {
+//       amount: item.quantity,
+//       name,
+//       price,
+//       image,
+//       product: _id,
+//     };
+//     // add item to order
+//     orderItems = [...orderItems, singleOrderItem];
+//     // orderItems.push(singleOrderItem)
+//     // calculate subtotal
+//     subtotal += item.quantity * price;
+//   }
+//   // calculate total
+//   const total = tax + shippingFee + subtotal;
+//   // get client secret
+//   const paymentIntent = await fakeStripeAPI({
+//     amount: total,
+//     currency: 'usd',
+//   });
+
+//   const order = await Order.create({
+//     orderItems,
+//     total,
+//     subtotal,
+//     tax,
+//     shippingFee,
+//     clientSecret: paymentIntent.client_secret,
+//     user: req.user.userId,
+//   });
+
+//   res
+//     .status(StatusCodes.CREATED)
+//     .json({ order, clientSecret: order.clientSecret });
+// };
