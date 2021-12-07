@@ -90,7 +90,6 @@ const updateUserPassword = async (req, res) => {
     throw new CustomError.UnauthenticatedError('Invalid Credentials');
   }
   user.password = newPassword;
-
   await user.save();
   res.status(StatusCodes.OK).json({ msg: 'Success! Password Updated.' });
 };

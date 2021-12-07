@@ -32,7 +32,10 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       default: '/uploads/example.jpeg',
     },
-    category: {
+    categoryEn: {
+      type: String,
+    },
+    categoryAr: {
       type: String,
     },
     categoryImage: { type: String },
