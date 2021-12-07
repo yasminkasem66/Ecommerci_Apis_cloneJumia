@@ -18,7 +18,7 @@ const createProduct = async (req, res) => {
 // };
 
 const getAllProducts = async (req, res) => {
-  const { featured, company, nameEn, nameAr, sort, fields, numericFilters, category, categoryparent} = req.query
+  const { featured, company, nameEn, nameAr, sort, fields, numericFilters, category, colors, brand ,categoryparent} = req.query
   console.log(" req.query", req.query);
   const queryObject = {}
   if (featured) {
@@ -29,6 +29,12 @@ const getAllProducts = async (req, res) => {
   }
   if (category) {
     queryObject.category = category
+  }
+  if (colors) {
+    queryObject.colors = colors
+  }
+  if (brand) {
+    queryObject.brand = brand
   }
   if (categoryparent) {
     queryObject.categoryparent = categoryparent
