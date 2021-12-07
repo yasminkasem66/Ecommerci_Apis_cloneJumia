@@ -13,7 +13,7 @@ const ProductSchema = new mongoose.Schema(
       required: [true, 'Please provide product name'],
       maxlength: [100, 'Name can not be more than 100 characters'],
     },
-    price: {
+    price:{
       type: Number,
       required: [true, 'Please provide product price'],
       default: 0,
@@ -32,10 +32,7 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       default: '/uploads/example.jpeg',
     },
-    categoryEn: {
-      type: String,
-    },
-    categoryAr: {
+    category: {
       type: String,
     },
     categoryImage: { type: String },
@@ -67,6 +64,9 @@ const ProductSchema = new mongoose.Schema(
     weight: {
       type: Number,
     },
+    size: {
+      type: Number,
+    },
     model: {
       type: String,
     },
@@ -93,9 +93,14 @@ const ProductSchema = new mongoose.Schema(
       //   values: ['ikea', 'liddy', 'marcos'],
       //   message: '{VALUE} is not supported',
       // },
+    // colors: {
+    //   type: [String],
+    //   default: ['white'],
+    //   required: true,
+    // },
     colors: {
-      type: [String],
-      default: ['white'],
+      type: String,
+      default: 'white',
       required: true,
     },
     featured: {
