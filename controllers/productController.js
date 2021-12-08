@@ -21,8 +21,20 @@ const getAllProducts = async (req, res) => {
   const { lang } = req.params;
   console.log(" req.query", req.query);
   console.log(" lang", lang);
+  // if (lang == 'en') {
+  //   let { featured, company, nameEn, nameAr, sort, fields, numericFilters, category: categoryEn, colors, brand, categoryparent: categoryparentEn } = req.query
+  // } else {
+  //   let { featured, company, nameEn, nameAr, sort, fields, numericFilters, category: categoryAr, colors, brand, categoryparent: categoryparentAr } = req.query
+  // }
+  let categoryparentEn, categoryparentAr, categoryEn, categoryAr;
+  let { featured, company, nameEn, nameAr, sort, fields, numericFilters, category, colors, brand, categoryparent } = req.query;
+ ( lang == 'en') ? (categoryparentEn = categoryparent) : ( categoryparentAr= categoryparent);
+ ( lang == 'en' )? (categoryEn = category) : (categoryAr=category);
 
-  const { featured, company, nameEn, nameAr, sort, fields, numericFilters, category, colors, brand, categoryparent } = req.query
+  console.log(" categoryparentEn", categoryparentEn);
+  console.log(" categoryEn", categoryEn);
+
+
   const queryObject = {}
   if (featured) {
     queryObject.featured = featured === 'true' ? true : false
@@ -30,8 +42,11 @@ const getAllProducts = async (req, res) => {
   if (company) {
     queryObject.company = company
   }
-  if (category) {
-    queryObject.category = category
+  if (categoryEn) {
+    queryObject.categoryEn = categoryEn
+  }
+  if (categoryAr) {
+    queryObject.categoryAr = categoryAr
   }
   if (colors) {
     queryObject.colors = colors
@@ -39,8 +54,11 @@ const getAllProducts = async (req, res) => {
   if (brand) {
     queryObject.brand = brand
   }
-  if (categoryparent) {
-    queryObject.categoryparent = categoryparent
+  if (categoryparentEn) {
+    queryObject.categoryparentEn = categoryparentEn
+  }
+  if (categoryparentAr) {
+    queryObject.categoryparentAr = categoryparentAr
   }
   if (nameEn) {
     console.log("nameEn", nameEn);
