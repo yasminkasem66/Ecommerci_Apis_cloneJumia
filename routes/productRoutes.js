@@ -21,6 +21,10 @@ const { getSingleProductReviews } = require('../controllers/reviewController');
 router
   .route('/')
   .post([authenticateUser, authorizeRoles('admin')], createProduct)
+
+  
+router
+  .route('/:lang')
   .get(getAllProducts);
 
 router
@@ -33,14 +37,17 @@ router
 //   .post([authenticateUser, authorizeRoles('admin')], upload.single('image'));
 
 
-router.route('/categories').get(getCategories);
-router.route('/ParentCategories').get(getParentCategories);
+router.route('/categories/:lang').get(getCategories);
+router.route('/ParentCategories/:lang').get(getParentCategories);
 
   
 
 router
-  .route('/:id')
+  .route('/:id/:lang')
   .get(getSingleProduct)
+
+router
+  .route('/:id')
   .patch([authenticateUser, authorizeRoles('admin')], updateProduct)
   .delete([authenticateUser, authorizeRoles('admin')], deleteProduct);
 

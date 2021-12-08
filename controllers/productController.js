@@ -18,8 +18,11 @@ const createProduct = async (req, res) => {
 // };
 
 const getAllProducts = async (req, res) => {
-  const { featured, company, nameEn, nameAr, sort, fields, numericFilters, category, colors, brand ,categoryparent} = req.query
+  const { lang } = req.params;
   console.log(" req.query", req.query);
+  console.log(" lang", lang);
+
+  const { featured, company, nameEn, nameAr, sort, fields, numericFilters, category, colors, brand, categoryparent } = req.query
   const queryObject = {}
   if (featured) {
     queryObject.featured = featured === 'true' ? true : false
@@ -40,12 +43,12 @@ const getAllProducts = async (req, res) => {
     queryObject.categoryparent = categoryparent
   }
   if (nameEn) {
-    console.log("nameEn",nameEn);
-    queryObject.nameEn={$regex: nameEn,$options:'i'}
+    console.log("nameEn", nameEn);
+    queryObject.nameEn = { $regex: nameEn, $options: 'i' }
   }
   if (nameAr) {
     console.log("nameAr", nameAr);
-    queryObject.nameAr={$regex: nameAr,$options:'i'}
+    queryObject.nameAr = { $regex: nameAr, $options: 'i' }
   }
   if (numericFilters) {
     const operatorMap = {
@@ -54,8 +57,9 @@ const getAllProducts = async (req, res) => {
       '=': '$eq',
       '<': '$lt',
       '<=': '$lte',
+      '&lt;': '$lt',
     }
-    const regEx = /\b(<|>|>=|=|<|<=)\b/g
+    const regEx = /\b(<|>|>=|=|<|<=|&lt;)\b/g
     let filters = numericFilters.replace(
       regEx,
       (match) => `-${operatorMap[match]}-`
@@ -70,7 +74,7 @@ const getAllProducts = async (req, res) => {
   }
 
   let result = Product.find(queryObject)
-  console.log(" queryObject", queryObject);
+  // console.log(" queryObject", queryObject);
 
   // sort
   if (sort) {
@@ -92,101 +96,94 @@ const getAllProducts = async (req, res) => {
   result = result.skip(skip).limit(limit)
   // 23
   // 4 7 7 7 2
-
   const products = await result
-  res.status(200).json({ products, nbHits: products.length })
+
+   let newProductAr=[];
+   let newProductEn=[];
+
+  if (lang == 'en') {
+    products.map((product) => {
+      newProductEn.push({
+        id: product._id, name: product.nameEn, price: product.price, description: product.descriptionEn, image: product.image, category: product.categoryEn, categoryparent: product.categoryparentEn, categoryImage: product.categoryImage, sku: product.sku
+        , weight: product.weight, size: product.size, model: product.model, material: product.material,
+        quantity: product.quantity, shopType: product.shopType, brand: product.brand, colors: product.colors, featured: product.featured, freeShipping: product.freeShipping, inventory: product.inventory, averageRating: product.averageRating, numOfReviews: product.numOfReviews, user: product.user, company: product.company
+      })
+    })
+    
+  } else {  
+    products.map((product) => {
+      newProductAr.push({
+        id: product._id, name: product.nameAr, price: product.price, description: product.descriptionAr, image: product.image, category: product.categoryAr, categoryparent: product.categoryparentAr, categoryImage: product.categoryImage, sku: product.sku, weight: product.weight, size: product.size, model: product.model, material: product.material,
+        quantity: product.quantity, shopType: product.shopType, brand: product.brand, colors: product.colors, featured: product.featured, freeShipping: product.freeShipping, inventory: product.inventory, averageRating: product.averageRating, numOfReviews: product.numOfReviews, user: product.user, company: product.company
+      })
+    })
+  }
+
+  if (lang == 'en') {
+    res.status(StatusCodes.OK).json({products: newProductEn, nbHits: products.length});
+
+  } else {
+    res.status(StatusCodes.OK).json({products: newProductAr, nbHits: products.length});
+  }
+
+  // res.status(200).json({ products, nbHits: products.length })
 }
-
-
-// const getAllProducts = async (req, res) => {
-//   const { featured, company, name, color, category, sort, fields, numericFilters } = req.query
-//   const queryObject = {}
-
-//   if (featured) {
-//     queryObject.featured = featured === 'true' ? true : false
-//   }
-//   if (company) {
-//     queryObject.company = company
-//   }
-//   if (name) {
-//     queryObject.name = { $regex: name, $options: 'i' }
-//   }
-//   if (color) {
-//     queryObject.color = color
-//   }
-//   if (category) {
-//     queryObject.category = category
-//   }
-//   if (numericFilters) {
-//     const operatorMap = {
-//       '>': '$gt',
-//       '>=': '$gte',
-//       '=': '$eq',
-//       '<': '$lt',
-//       '<=': '$lte',
-//     }
-//     const regEx = /\b(<|>|>=|=|<|<=)\b/g
-//     let filters = numericFilters.replace(
-//       regEx,
-//       (match) => `-${operatorMap[match]}-`
-//     )
-//     const options = ['price', 'rating']
-//     filters = filters.split(',').forEach((item) => {
-//       const [field, operator, value] = item.split('-')
-//       if (options.includes(field)) {
-//         queryObject[field] = { [operator]: Number(value) }
-//       }
-//     })
-//   }
-
-
-//   let result = Product.find(queryObject)
-//   // sort
-//   if (sort) {
-//     const sortList = sort.split(',').join(' ')
-//     result = result.sort(sortList)
-//   } else {
-//     result = result.sort('createAt')
-//   }
-
-//   if (fields) {
-//     const fieldsList = fields.split(',').join(' ')
-//     result = result.select(fieldsList)
-//   }
-//   const page = Number(req.query.page) || 1
-//   const limit = Number(req.query.limit) || 30
-//   const skip = (page - 1) * limit
-
-//   result = result.skip(skip).limit(limit)
-
-//   const products = await result
-//   res.status(200).json({ products, nbHits: products.length })
-// }
 
 
 
 
 const getCategories = async (req, res) => {
-  const categories = await Product.find().distinct('category');
-  console.log("categories", categories);
-  res.status(StatusCodes.OK).json({ categories });
+  const { lang } = req.params;
+  console.log(" lang", lang);
+  if (lang == 'en') {
+    const categoriesEn = await Product.find().distinct('categoryEn');
+    res.status(StatusCodes.OK).json({ categories: categoriesEn });
+  }else {
+    const categoriesAr = await Product.find().distinct('categoryAr');
+    res.status(StatusCodes.OK).json({ categories: categoriesAr });
+  }
+  // res.status(StatusCodes.OK).json({ categories });
 };
 
 const getParentCategories = async (req, res) => {
-  const categoriesparent = await Product.find().distinct('categoryparent');
-  res.status(StatusCodes.OK).json({ categoriesparent });
+  const { lang } = req.params;
+  console.log(" lang", lang);
+  if (lang == 'en') {
+    const categoriesparentEn = await Product.find().distinct('categoryparentEn');
+    res.status(StatusCodes.OK).json({ categoriesparent: categoriesparentEn });
+  } else {
+    const categoriesparentAr = await Product.find().distinct('categoryparentAr');
+    res.status(StatusCodes.OK).json({ categoriesparent: categoriesparentAr });
+  }
+  // const categoriesparent = await Product.find().distinct('categoryparent');
+  // res.status(StatusCodes.OK).json({ categoriesparent });
 };
-
-
-
 
 const getSingleProduct = async (req, res) => {
   const { id: productId } = req.params;
+  const { lang } = req.params;
+  console.log("req.params", req.params)
+  console.log("lang", lang)
+
   const product = await Product.findOne({ _id: productId }).populate('reviews');
   if (!product) {
     throw new CustomError.NotFoundError(`No product with id : ${productId}`);
+  }  
+  let newProductAr = {
+     id: product._id,name: product.nameAr,price: product.price, description: product.descriptionAr, image: product.image, category: product.category, categoryparent: product.categoryparent, categoryImage: product.categoryImage, sku: product.sku, weight: product.weight, size: product.size, model: product.model, material: product.material,
+    quantity: product.quantity, shopType: product.shopType, brand: product.brand, colors: product.colors, featured: product.featured, freeShipping: product.freeShipping, inventory: product.inventory, averageRating: product.averageRating, numOfReviews: product.numOfReviews, user: product.user, company: product.company
   }
-  res.status(StatusCodes.OK).json({ product });
+  let newProductEn = {
+      id: product._id, name: product.nameEn,price: product.price, description: product.descriptionEn, image: product.image, category: product.category, categoryparent: product.categoryparent, categoryImage: product.categoryImage, sku: product.sku
+    , weight: product.weight, size: product.size, model: product.model, material: product.material,
+    quantity: product.quantity, shopType: product.shopType, brand: product.brand, colors: product.colors, featured: product.featured, freeShipping: product.freeShipping, inventory: product.inventory, averageRating: product.averageRating, numOfReviews: product.numOfReviews, user: product.user, company: product.company
+  }
+  if (lang == 'en') {
+    res.status(StatusCodes.OK).json({ product:newProductEn });
+    
+  }else{
+    res.status(StatusCodes.OK).json({ product:newProductAr });
+  }
 };
 
 
@@ -241,14 +238,14 @@ const uploadImage = async (req, res) => {
     __dirname,
     '../public/uploads/' + `${productImage.name}`
   );
-  await productImage.mv(imagePath);   
+  await productImage.mv(imagePath);
   res.status(StatusCodes.OK).json({ image: `${url}/public/uploads/${productImage.name}` });
 };
 
 
 // //multer
 // var store = multer.diskStorage({
-  
+
 //   destination: function (req, file, cb) {
 //     console.log("multerstore");
 //     cb(null, '../public/uploads');
