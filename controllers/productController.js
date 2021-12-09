@@ -26,10 +26,11 @@ const getAllProducts = async (req, res) => {
   // } else {
   //   let { featured, company, nameEn, nameAr, sort, fields, numericFilters, category: categoryAr, colors, brand, categoryparent: categoryparentAr } = req.query
   // }
-  let categoryparentEn, categoryparentAr, categoryEn, categoryAr;
-  let { featured, company, nameEn, nameAr, sort, fields, numericFilters, category, colors, brand, categoryparent } = req.query;
- ( lang == 'en') ? (categoryparentEn = categoryparent) : ( categoryparentAr= categoryparent);
- ( lang == 'en' )? (categoryEn = category) : (categoryAr=category);
+  let categoryparentEn, categoryparentAr, categoryEn, categoryAr, nameEn, nameAr;
+  let { featured, company, name, sort, fields, numericFilters, category, colors, brand, categoryparent } = req.query;
+  (lang == 'en') ? (categoryparentEn = categoryparent) : (categoryparentAr = categoryparent);
+  (lang == 'en') ? (categoryEn = category) : (categoryAr = category);
+  (lang == 'en') ? (nameEn = name) : (nameAr = name);
 
   console.log(" categoryparentEn", categoryparentEn);
   console.log(" categoryEn", categoryEn);
@@ -116,8 +117,8 @@ const getAllProducts = async (req, res) => {
   // 4 7 7 7 2
   const products = await result
 
-   let newProductAr=[];
-   let newProductEn=[];
+  let newProductAr = [];
+  let newProductEn = [];
 
   if (lang == 'en') {
     products.map((product) => {
@@ -127,8 +128,8 @@ const getAllProducts = async (req, res) => {
         quantity: product.quantity, shopType: product.shopType, brand: product.brand, colors: product.colors, featured: product.featured, freeShipping: product.freeShipping, inventory: product.inventory, averageRating: product.averageRating, numOfReviews: product.numOfReviews, user: product.user, company: product.company
       })
     })
-    
-  } else {  
+
+  } else {
     products.map((product) => {
       newProductAr.push({
         id: product._id, name: product.nameAr, price: product.price, description: product.descriptionAr, image: product.image, category: product.categoryAr, categoryparent: product.categoryparentAr, categoryImage: product.categoryImage, sku: product.sku, weight: product.weight, size: product.size, model: product.model, material: product.material,
@@ -138,10 +139,10 @@ const getAllProducts = async (req, res) => {
   }
 
   if (lang == 'en') {
-    res.status(StatusCodes.OK).json({products: newProductEn, nbHits: products.length});
+    res.status(StatusCodes.OK).json({ products: newProductEn, nbHits: products.length });
 
   } else {
-    res.status(StatusCodes.OK).json({products: newProductAr, nbHits: products.length});
+    res.status(StatusCodes.OK).json({ products: newProductAr, nbHits: products.length });
   }
 
   // res.status(200).json({ products, nbHits: products.length })
@@ -156,7 +157,7 @@ const getCategories = async (req, res) => {
   if (lang == 'en') {
     const categoriesEn = await Product.find().distinct('categoryEn');
     res.status(StatusCodes.OK).json({ categories: categoriesEn });
-  }else {
+  } else {
     const categoriesAr = await Product.find().distinct('categoryAr');
     res.status(StatusCodes.OK).json({ categories: categoriesAr });
   }
@@ -186,21 +187,21 @@ const getSingleProduct = async (req, res) => {
   const product = await Product.findOne({ _id: productId }).populate('reviews');
   if (!product) {
     throw new CustomError.NotFoundError(`No product with id : ${productId}`);
-  }  
+  }
   let newProductAr = {
-     id: product._id,name: product.nameAr,price: product.price, description: product.descriptionAr, image: product.image, category: product.category, categoryparent: product.categoryparent, categoryImage: product.categoryImage, sku: product.sku, weight: product.weight, size: product.size, model: product.model, material: product.material,
+    id: product._id, name: product.nameAr, price: product.price, description: product.descriptionAr, image: product.image, category: product.category, categoryparent: product.categoryparent, categoryImage: product.categoryImage, sku: product.sku, weight: product.weight, size: product.size, model: product.model, material: product.material,
     quantity: product.quantity, shopType: product.shopType, brand: product.brand, colors: product.colors, featured: product.featured, freeShipping: product.freeShipping, inventory: product.inventory, averageRating: product.averageRating, numOfReviews: product.numOfReviews, user: product.user, company: product.company
   }
   let newProductEn = {
-      id: product._id, name: product.nameEn,price: product.price, description: product.descriptionEn, image: product.image, category: product.category, categoryparent: product.categoryparent, categoryImage: product.categoryImage, sku: product.sku
+    id: product._id, name: product.nameEn, price: product.price, description: product.descriptionEn, image: product.image, category: product.category, categoryparent: product.categoryparent, categoryImage: product.categoryImage, sku: product.sku
     , weight: product.weight, size: product.size, model: product.model, material: product.material,
     quantity: product.quantity, shopType: product.shopType, brand: product.brand, colors: product.colors, featured: product.featured, freeShipping: product.freeShipping, inventory: product.inventory, averageRating: product.averageRating, numOfReviews: product.numOfReviews, user: product.user, company: product.company
   }
   if (lang == 'en') {
-    res.status(StatusCodes.OK).json({ product:newProductEn });
-    
-  }else{
-    res.status(StatusCodes.OK).json({ product:newProductAr });
+    res.status(StatusCodes.OK).json({ product: newProductEn });
+
+  } else {
+    res.status(StatusCodes.OK).json({ product: newProductAr });
   }
 };
 
