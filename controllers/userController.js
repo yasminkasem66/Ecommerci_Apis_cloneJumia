@@ -10,7 +10,7 @@ const {
 const getAllUsers = async (req, res) => {
   console.log(req.user);
   const users = await User.find({ role: 'user' }).select('-password');
-  res.status(StatusCodes.OK).json({ users });
+  res.status(StatusCodes.OK).json({ users, nbHits: users.length } );
 };
 
 
@@ -29,7 +29,7 @@ const CreateAdmin = async (req, res) => {
   }
   const user = await User.create({ name, email, password, role ,image });
 
-  res.status(StatusCodes.CREATED).json({ user: user });
+  res.status(StatusCodes.CREATED).json({ user: user});
 };
 
 
@@ -72,8 +72,12 @@ const updateUser = async (req, res) => {
   await user.save();
 
   const tokenUser = createTokenUser(user);
+
+  let token = attachCookiesToResponse({ res, user: tokenUser });
   attachCookiesToResponse({ res, user: tokenUser });
-  res.status(StatusCodes.OK).json({ user: tokenUser });
+
+
+  res.status(StatusCodes.OK).json({ user: tokenUser, token: token });
 };
 
 
