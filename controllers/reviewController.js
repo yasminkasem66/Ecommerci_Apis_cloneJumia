@@ -14,11 +14,12 @@ const createReview = async (req, res) => {
   if (!isValidProduct) {
     throw new CustomError.NotFoundError(`No product with id : ${productId}`);
   }
+  console.log(res.body)
 
   const alreadySubmitted = await Review.findOne({
     product: productId,
     user: req.user.userId,
-  });
+  }); 
 
   if (alreadySubmitted) {
     throw new CustomError.BadRequestError(
@@ -98,7 +99,7 @@ const deleteReview = async (req, res) => {
 /////////test again 
 const getSingleProductReviews = async (req, res) => {
   const { id: productId } = req.params;
-  const reviews = await Review.find({ Product: productId });
+  const reviews = await Review.find({ product: productId });
   res.status(StatusCodes.OK).json({ reviews, count: reviews.length });
 };
 

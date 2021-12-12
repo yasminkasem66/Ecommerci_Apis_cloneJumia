@@ -23,10 +23,10 @@ const ReviewSchema = mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    Product: {
+    product: {
       type: mongoose.Schema.ObjectId,
       ref: 'Product',
-      // required: true,
+      required: true,
     },
   },
   { timestamps: true },
@@ -36,7 +36,7 @@ const ReviewSchema = mongoose.Schema(
 
 
 
-ReviewSchema.index({ product: 1, user: 1 }, { unique: true });
+// ReviewSchema.index({ product: 1, user: 1 }, { unique: false });
 
 ReviewSchema.statics.calculateAverageRating = async function (productId) {
   const result = await this.aggregate([
@@ -54,7 +54,7 @@ ReviewSchema.statics.calculateAverageRating = async function (productId) {
     await this.model('Product').findOneAndUpdate(
       { _id: productId },
       {
-        averageRating: Math.ceil(result[0]?.averageRating || 0),
+        averageRating: Math.round(result[0]?.averageRating*10/10 || 0),
         numOfReviews: result[0]?.numOfReviews || 0,
       }
     );
