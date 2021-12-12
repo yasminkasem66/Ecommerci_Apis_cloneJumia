@@ -92,7 +92,7 @@ const getAllProducts = async (req, res) => {
     })
   }
 
-  let result = Product.find(queryObject)
+  let result =   Product.find(queryObject)
   // console.log(" queryObject", queryObject);
 
   // sort
@@ -115,7 +115,7 @@ const getAllProducts = async (req, res) => {
   result = result.skip(skip).limit(limit)
   // 23
   // 4 7 7 7 2
-  const products = await result
+  const products =  await result
 
   let newProductAr = [];
   let newProductEn = [];
