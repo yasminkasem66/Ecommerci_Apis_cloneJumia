@@ -264,7 +264,6 @@ const uploadImage = async (req, res) => {
 
 // //multer
 // var store = multer.diskStorage({
-
 //   destination: function (req, file, cb) {
 //     console.log("multerstore");
 //     cb(null, '../public/uploads');
