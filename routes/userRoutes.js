@@ -15,12 +15,17 @@ const {
   updateUser,
   updateUserPassword,
   getAllAdmins,
-  CreateAdmin
+  CreateAdmin,
+  getAllSeller
 } = require('../controllers/userController');
 
 router
   .route('/')
   .get(authenticateUser, authorizeRoles('admin'), getAllUsers);
+  
+router
+  .route('/seller')
+  .get(authenticateUser, authorizeRoles('admin'), getAllSeller);
 
 router
   .route('/getAdmins')

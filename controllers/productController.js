@@ -109,7 +109,7 @@ const getAllProducts = async (req, res) => {
     result = result.select(fieldsList)
   }
   const page = Number(req.query.page) || 1
-  const limit = Number(req.query.limit) || 30
+  const limit = Number(req.query.limit) || 200
   const skip = (page - 1) * limit
 
   result = result.skip(skip).limit(limit)
@@ -165,8 +165,11 @@ const getCategories = async (req, res) => {
 };
 
 const getParentCategories = async (req, res) => {
-  const { lang } = req.params;
-  console.log(" lang", lang);
+  
+  const { lang, categoryparent } = req.params;
+  // let categoryparentEn, categoryparentAr;
+  // (lang == 'en') ? (categoryparentEn = categoryparent) : (categoryparentAr = categoryparent);
+  // console.log(" lang", lang);
   if (lang == 'en') {
     const categoriesparentEn = await Product.find().distinct('categoryparentEn');
     res.status(StatusCodes.OK).json({ categoriesparent: categoriesparentEn });

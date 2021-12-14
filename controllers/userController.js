@@ -13,6 +13,12 @@ const getAllUsers = async (req, res) => {
   res.status(StatusCodes.OK).json({ users, nbHits: users.length } );
 };
 
+const getAllSeller = async (req, res) => {
+  console.log(req.user);
+  const seller = await User.find({ role: 'seller' }).select('-password');
+  res.status(StatusCodes.OK).json({ seller, nbHits: seller.length } );
+};
+
 
 const getAllAdmins = async (req, res) => {
   console.log(req.user);
@@ -105,7 +111,8 @@ module.exports = {
   updateUser,
   updateUserPassword,
   getAllAdmins,
-  CreateAdmin
+  CreateAdmin,
+  getAllSeller
 };
 
 // update user with findOneAndUpdate

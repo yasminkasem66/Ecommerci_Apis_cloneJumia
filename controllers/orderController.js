@@ -5,6 +5,8 @@ const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 const { checkPermissions } = require('../utils');
 
+// let newQuantity;
+
 const fakeStripeAPI = async ({ amount, currency }) => {
   const client_secret = 'someRandomValue';
   return { client_secret, amount };
@@ -129,6 +131,38 @@ const updateOrder = async (req, res) => {
   res.status(StatusCodes.OK).json({ order });
 };
 
+// get pending projects
+const pendingOrders = async (req, res) => {
+  const noPendingOrder = await Order.find({status:"pending"}).countDocuments();
+  res.status(StatusCodes.OK).json({ noPendingOrder  });
+};
+//// get completed projects
+const completedOrders = async (req, res) => {
+  const noCompletedOrder = await Order.find({status:"completed"}).countDocuments();
+  res.status(StatusCodes.OK).json({ noCompletedOrder  });
+};
+
+
+
+// -----------------------------------------------
+//   Update:
+// router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
+//   try {
+//     const updatedProject = await Project.findByIdAndUpdate(
+//       req.params.id,
+//       {
+//         $set: req.body,
+//       },
+
+//       { new: true }
+//     );
+//     const saveproject = await updatedProject.save();
+//     res.status(200).json(saveproject);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
+
 // new update remove cart items
 // const removeCartItems = (req, res) => {
 //   const { productId } = req.body.payload;
@@ -157,11 +191,11 @@ const updateOrder = async (req, res) => {
 module.exports = {
   getAllOrders,
   getSingleOrder,
-
-  
   getCurrentUserOrders,
   createOrder,
   updateOrder,
+  pendingOrders,
+  completedOrders
 };
 
 
