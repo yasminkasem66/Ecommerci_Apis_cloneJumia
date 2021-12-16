@@ -151,6 +151,41 @@ const getAllProducts = async (req, res) => {
 
 
 
+
+
+// const filterPrice = async (req, res) => {
+//   let { lowPrice, highPrice } = req.query;
+//   console.log(lowPrice, lowPrice);
+//   console.log(highPrice, highPrice);
+//   if (highPrice ||  ) {
+//     const operatorMap = {
+//       '>': '$gt',
+//       '>=': '$gte',
+//       '=': '$eq',
+//       '<': '$lt',
+//       '<=': '$lte',
+//       '&lt;': '$lt',
+//     }
+//     const regEx = /\b(<|>|>=|=|<|<=|&lt;)\b/g
+//     let filters = numericFilters.replace(
+//       regEx,
+//       (match) => `-${operatorMap[match]}-`
+//     )
+//     const options = ['price', 'averageRating']
+//     filters = filters.split(',').forEach((item) => {
+//       const [field, operator, value] = item.split('-')
+//       if (options.includes(field)) {
+//         queryObject[field] = { [operator]: Number(value) }
+//       }
+//     })
+//   }
+
+//   let result = Product.find(queryObject)
+// };
+
+
+
+
 const getCategories = async (req, res) => {
   const { lang } = req.params;
   console.log(" lang", lang);
@@ -302,7 +337,8 @@ module.exports = {
   deleteProduct,
   uploadImage,
   getCategories,
-  getParentCategories
+  getParentCategories,
+  // filterPrice
 };
 
 

@@ -13,7 +13,8 @@ const {
   deleteProduct,
   uploadImage,
   getCategories,
-  getParentCategories
+  getParentCategories,
+  // filterPrice
 } = require('../controllers/productController');
 
 const { getSingleProductReviews } = require('../controllers/reviewController');
@@ -26,6 +27,9 @@ router
 router
   .route('/:lang')
   .get(getAllProducts);
+// router
+//   .route('/:lang/filter')
+//   .get(filterPrice);
 
 router
   .route('/uploadImage')
