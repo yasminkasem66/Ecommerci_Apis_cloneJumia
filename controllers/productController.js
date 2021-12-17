@@ -11,11 +11,11 @@ const createProduct = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ product });
 };
 
-//test
-// const getAllProducts = async (req, res) => {
-//   const products = await Product.find({});
-//   res.status(StatusCodes.OK).json({ products, count: products.length });
-// };
+// test
+const getAllProducts2 = async (req, res) => {
+  const products = await Product.find({});
+  res.status(StatusCodes.OK).json({ products, count: products.length });
+};
 
 const getAllProducts = async (req, res) => {
   const { lang } = req.params;
@@ -338,6 +338,7 @@ module.exports = {
   uploadImage,
   getCategories,
   getParentCategories,
+  getAllProducts2
   // filterPrice
 };
 

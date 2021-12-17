@@ -14,6 +14,7 @@ const {
   uploadImage,
   getCategories,
   getParentCategories,
+  getAllProducts2
   // filterPrice
 } = require('../controllers/productController');
 
@@ -27,9 +28,9 @@ router
 router
   .route('/:lang')
   .get(getAllProducts);
-// router
-//   .route('/:lang/filter')
-//   .get(filterPrice);
+router
+  .route('/getall')
+  .get(getAllProducts2);
 
 router
   .route('/uploadImage')
